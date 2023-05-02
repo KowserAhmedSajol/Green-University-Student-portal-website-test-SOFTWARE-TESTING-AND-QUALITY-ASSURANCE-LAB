@@ -1,0 +1,150 @@
+
+package projectsqa;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+public class ProjectSQA {
+    
+        static void note(String name){
+        System.out.println("----------------------------------------");
+        System.out.println("           "+name+"");
+        System.out.println("----------------------------------------");
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        
+        
+        
+        
+        
+        Scanner myObj = new Scanner(System.in);
+        System.out.print("Enter userID for Login:- ");
+        int userID = myObj.nextInt();
+        
+        System.out.print("Enter user Password for Login:- ");
+        String useName = myObj.nextLine();
+        String userName = myObj.nextLine();
+        
+        System.out.print("Enter your full name:- ");
+        String fullName = myObj.nextLine();
+        
+        System.out.print("What is the amount of your balance due(If 0 then input 00):- ");
+        String balance = myObj.nextLine();
+        
+        System.out.print("What is Email acount name:- ");
+        String email = myObj.nextLine();
+    
+       
+        
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\User\\Downloads\\VACC\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://studentportal.green.edu.bd/Account/login");
+        driver.manage().window().maximize();
+    
+    
+    
+    
+    
+    
+    
+        String url= driver.getCurrentUrl();
+        System.out.println("Current URL is:- "+url);
+        
+        String title= driver.getTitle();
+        System.out.println("Current page title is:- "+title);
+        
+        Thread.sleep(1000);
+        driver.findElement(By.id("Input_LoginId")).sendKeys(""+userID);
+        Thread.sleep(1000);
+        driver.findElement(By.id("Input_Password")).sendKeys(""+userName);
+        driver.findElement(By.xpath("/html/body/div/main/div/section/form/div[4]/button")).click();
+        
+        String currntTitle= driver.getTitle();
+        note("Log In Test");
+        System.out.println(currntTitle);
+        String expectedTitle= "Home page - GUB Student Portal";
+        if(currntTitle.equals(expectedTitle)){
+            System.out.println("Log in Successful");
+            System.out.println("Current page title is:- " +currntTitle);
+            note("Profile Name Check");
+            String currentProfile = driver.findElement(By.xpath("/html/body/header/nav/div/div/div[2]/div/ul/li[2]/a/span")).getText();
+            String expectedProfile = ""+userID+" | "+fullName;
+            if(currentProfile.equals(expectedProfile)){
+                System.out.println("Hurrah! Your Name and ID matched");
+            }else{
+                System.out.println("Name and ID not matching");
+            }
+            Thread.sleep(3000);
+            note("Balance Check");
+            driver.findElement(By.xpath("/html/body/div/main/div[1]/ul/div[1]/div/li[3]/a/span")).click();
+            Thread.sleep(3000);
+            String currentDue= driver.findElement(By.xpath("/html/body/div/main/div[2]/div/section/div[2]/div[2]/form/div/div[3]/div[1]")).getText();
+            
+            String expectedDue= "Balance (Due/Advance): "+balance;
+            System.out.println("Current Balance due is   :- "+currentDue);
+            System.out.println("Expected Balance due is  :- "+expectedDue);
+            if(currentDue.equals(expectedDue)){
+                System.out.println("Hurrah! Your Due taka is okey");
+            }else{
+                System.out.println("There is a problem in your due");
+            }
+            note("Footer Check");
+            String expectedFooter = "© 2022 - Edusoft Consultants Ltd.";
+            String currentFooter = driver.findElement(By.xpath("/html/body/footer/div")).getText();
+            System.out.println("Current Footer is  :- "+currentFooter);
+            System.out.println("Expected Footer is :- "+expectedFooter);
+            if(expectedFooter.equals(currentFooter)){
+                System.out.println("Footer is okey");
+            }else{
+                System.out.println("Footer is not okey");
+            }
+            note("Active status Check");
+            driver.findElement(By.xpath("/html/body/div/main/div[1]/ul/div[1]/div/li[8]/a/span")).click();
+            Thread.sleep(3000);
+            String currentActiveStatus= driver.findElement(By.xpath("/html/body/div/main/div[2]/div/section/div[4]/div/div/div[2]/div/div/div/div[2]/span[1]/span")).getText();
+            String expectedActiveStatus = "InActive";
+            System.out.println("Current ActiveStatus is  :- "+currentActiveStatus);
+            System.out.println("Expected ActiveStatus is :- "+expectedActiveStatus);
+            if(expectedFooter.equals(currentFooter)){
+                System.out.println("ActiveStatus is okey");
+            }else{
+                System.out.println("ActiveStatus is not okey");
+            }
+            
+            note("Email Check");
+            driver.findElement(By.xpath("/html/body/div/main/div[1]/ul/div[1]/div/li[8]/a/span")).click();
+            Thread.sleep(3000);
+            String currentEmail= driver.findElement(By.xpath("/html/body/div/main/div[2]/div/section/div[5]/div/div/div[2]/div/div/div/div[1]/span[1]/span")).getText();
+            String expectedEmail = email;
+            System.out.println("Current Email is  :- "+currentEmail);
+            System.out.println("Expected Email is :- "+expectedEmail);
+            if(currentEmail.equals(expectedEmail)){
+                System.out.println("Email is okey");
+            }else{
+                System.out.println("Email is not okey");
+            }
+            note("LogOut BTN Check");
+            driver.findElement(By.xpath("/html/body/header/nav/div/div/div[2]/div/ul/li[3]/a")).click();
+            currntTitle= driver.getTitle();
+            System.out.println("Current page title is:- " +currntTitle);
+            expectedTitle= "Log in - GUB Student Portal";
+            if(currntTitle.equals(expectedTitle)){
+                System.out.println("LogOut Successful");
+            }else{
+                System.out.println("LogOut UnSuccessful");
+            }
+        }else{
+            System.out.println("Log in Unsuccessful because The Current page is still Log In page.");
+        }
+        
+        driver.close();
+   }   
+}
